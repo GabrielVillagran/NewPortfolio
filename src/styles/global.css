@@ -30,3 +30,36 @@
 .article-body th,.article-body td{padding:8px 14px;border:1px solid var(--line)}
 .revision-note{max-width:780px;margin:35px 0 0;padding:15px 20px;border-left:3px solid var(--orange);background:#162024;color:#b9c6c7;font:12px "IBM Plex Mono",monospace}
 @media(max-width:780px){.hero-photo,.hero-photo img{min-height:360px;max-height:480px}.writing-grid{grid-template-columns:1fr}.hero-photo-overlay{flex-direction:column}}
+
+/* Work: cinematic mission selector */
+.work-intro{padding-bottom:48px}
+.mission-select{margin:0 0 105px;border:1px solid var(--line);background:#0e1518;overflow:hidden}
+.mission-topline{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 24px;border-bottom:1px solid var(--line)}
+.mission-counter{font:600 15px "IBM Plex Mono",monospace;color:#f1e8d8}
+.mission-counter [data-current]{color:var(--orange)}
+.mission-stage{display:grid;grid-template-columns:75px minmax(0,1fr) 75px;align-items:stretch}
+.mission-arrow{appearance:none;background:#111b1f;border:0;border-right:1px solid var(--line);color:var(--orange);cursor:pointer;font:30px "Barlow Condensed",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:background .2s}
+.mission-arrow:last-child{border-left:1px solid var(--line);border-right:0}
+.mission-arrow span{font:10px "IBM Plex Mono",monospace;color:#b4bfc1}
+.mission-arrow:hover:not(:disabled){background:#2a2724}
+.mission-arrow:disabled{opacity:.3;cursor:default}
+.mission-viewport{display:flex;scroll-snap-type:x mandatory;overflow-x:auto;scrollbar-width:none;overscroll-behavior-inline:contain}
+.mission-viewport::-webkit-scrollbar{display:none}
+.mission-slide{min-width:100%;scroll-snap-align:start;display:grid;grid-template-columns:.8fr 1.2fr;min-height:425px}
+.mission-art{position:relative;overflow:hidden;min-height:350px;background:radial-gradient(circle at center,#a54e3229,transparent 58%),linear-gradient(150deg,#222e30,#111819);border-right:1px solid var(--line)}
+.mission-art-grid{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 28px,#a6b5ad0b 29px),repeating-linear-gradient(90deg,transparent 0 28px,#a6b5ad0b 29px)}
+.mission-art-symbol{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font:800 clamp(125px,17vw,235px) "Barlow Condensed",sans-serif;color:#ff6848;text-shadow:0 0 80px #ff684847;line-height:1}
+.mission-art-label,.mission-art-footer{position:absolute;left:23px;font:10px "IBM Plex Mono",monospace;letter-spacing:.08em;color:#b4c2c1}
+.mission-art-label{top:25px}.mission-art-footer{bottom:24px}
+.mission-info{display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,4vw,65px)}
+.mission-info h2{font:800 clamp(43px,5.5vw,76px) "Barlow Condensed",sans-serif;line-height:1;margin:20px 0 6px}
+.mission-role{color:#f5b59d;font:12px "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.06em}
+.mission-description{font-size:16px;color:#bfccce;line-height:1.8;max-width:620px}
+.mission-bottom{margin-top:26px;padding-top:18px;border-top:1px solid var(--line);color:var(--green);font:10px "IBM Plex Mono",monospace;letter-spacing:.08em}
+.mission-footer{padding:17px 24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:20px}
+.mission-dots{display:flex;gap:9px}.mission-dots button{background:#1e2b30;border:1px solid #4a5b60;color:#afc1c5;padding:9px 14px;cursor:pointer;font:12px "IBM Plex Mono",monospace}
+.mission-dots button[aria-current=true]{background:var(--orange);border-color:var(--orange);color:#0b1114}
+.mission-footer p{font:10px "IBM Plex Mono",monospace;color:#83999f;letter-spacing:.04em;text-align:right}
+.mission-footer p span{color:var(--orange)}
+@media(max-width:900px){.mission-slide{grid-template-columns:1fr}.mission-art{min-height:220px;border-right:0;border-bottom:1px solid var(--line)}.mission-art-symbol{font-size:160px}.mission-info{padding:32px}.mission-stage{grid-template-columns:52px minmax(0,1fr) 52px}}
+@media(max-width:600px){.mission-stage{grid-template-columns:40px minmax(0,1fr) 40px}.mission-arrow{font-size:23px}.mission-arrow span{font-size:8px}.mission-art{min-height:150px}.mission-art-symbol{font-size:120px}.mission-art-label,.mission-art-footer{font-size:8px;left:12px}.mission-info{padding:22px}.mission-info h2{font-size:42px}.mission-description{font-size:14px}.mission-footer{align-items:flex-start;flex-direction:column}.mission-footer p{text-align:left}}
