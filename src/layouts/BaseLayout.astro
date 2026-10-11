@@ -58,6 +58,28 @@ const pathname = Astro.url.pathname;
       const acceptButton = document.querySelector<HTMLButtonElement>('[data-analytics-accept]');
       const rejectButton = document.querySelector<HTMLButtonElement>('[data-analytics-reject]');
 
+      const analyticsDebug = new URLSearchParams(window.location.search).get('analytics_debug') === '1';
+      let analyticsScriptStatus = 'not requested';
+      let analyticsDebugPanel: HTMLElement | null = null;
+      const updateAnalyticsDebug = () => {
+        if (!analyticsDebug) return;
+        if (!analyticsDebugPanel) {
+          analyticsDebugPanel = document.createElement('aside');
+          analyticsDebugPanel.setAttribute('role', 'status');
+          analyticsDebugPanel.setAttribute('aria-live', 'polite');
+          analyticsDebugPanel.style.cssText = 'position:fixed;right:12px;bottom:12px;z-index:9999;max-width:340px;padding:18px;background:#131d21;color:#e8eceb;border:1px solid #ff6848;font:12px/1.6 monospace;box-shadow:0 8px 28px #000b;white-space:pre-wrap';
+          document.body.appendChild(analyticsDebugPanel);
+        }
+        let stored = 'unavailable';
+        try { stored = localStorage.getItem(consentKey) || 'not decided'; } catch { /* private mode */ }
+        analyticsDebugPanel.textContent = `GA4 DIAGNOSTIC
+Measurement ID: ${measurementId}
+Consent: ${stored}
+Google script: ${analyticsScriptStatus}
+dataLayer entries: ${(window as typeof window & { dataLayer?: unknown[] }).dataLayer?.length ?? 0}
+
+Check Google Analytics Realtime after a successful script load. A loaded script alone does not confirm event delivery.`;
+      };
       const enableAnalytics = () => {
         if (document.querySelector('script[data-ga4]')) return;
         const win = window as typeof window & { dataLayer?: unknown[][]; gtag?: (...args: unknown[]) => void };
@@ -68,8 +90,12 @@ const pathname = Astro.url.pathname;
         const script = document.createElement('script');
         script.async = true;
         script.dataset.ga4 = 'true';
+        analyticsScriptStatus = 'loading';
+        script.addEventListener('load', () => { analyticsScriptStatus = 'loaded'; updateAnalyticsDebug(); });
+        script.addEventListener('error', () => { analyticsScriptStatus = 'blocked or network error'; updateAnalyticsDebug(); });
         script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
         document.head.appendChild(script);
+        updateAnalyticsDebug();
       };
 
       let analyticsChoice: string | null = null;
@@ -82,9 +108,11 @@ const pathname = Astro.url.pathname;
         if (choice === 'accepted') enableAnalytics();
         else if (analyticsChoice === 'accepted') window.location.reload();
         analyticsChoice = choice;
+        updateAnalyticsDebug();
       };
       acceptButton?.addEventListener('click', () => saveConsent('accepted'));
       rejectButton?.addEventListener('click', () => saveConsent('declined'));
+      updateAnalyticsDebug();
       document.querySelector<HTMLButtonElement>('[data-analytics-settings]')?.addEventListener('click', () => { if (consentPanel) consentPanel.hidden = false; });
 
       const shell = document.querySelector<HTMLElement>('[data-site-shell]');
