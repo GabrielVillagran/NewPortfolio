@@ -12,7 +12,10 @@ import { roles, projects, stack } from '../data/site';
       <p class="hero-description secondary">I have a passion for continuous learning. In my free time, I'm learning to build video games using Three.js and develop small apps.</p>
       <div class="hero-actions"><a class="button button-primary" href="/work/">EXPLORE EXPERIENCE <span>↗</span></a><a class="button button-outline" href="/projects/">VIEW PROJECTS <span>↗</span></a></div>
     </div>
-    <div class="hero-photo" role="img" aria-label="Gabriel at a football stadium in Atlanta"><img src="/images/gabriel-stadium.webp" alt="Gabriel at a football stadium in Atlanta" loading="eager" width="960" height="1280" /><div class="hero-photo-overlay"><span>ATLANTA // PERSONAL ARCHIVE</span><span>WORLD CUP EXPERIENCE</span></div></div><div class="visual-top">PERSONAL IDENTITY // GV—001</div><div class="visual-bottom"><span>ENGINEERING / EXPERIMENTS / MUSIC</span><span>ONLINE <i /></span></div><div class="coord coord-a">47° 36' 00 N</div><div class="coord coord-b">SYSTEM // ACTIVE</div></div>
+    <div class="hero-photo">
+      <img src="/images/gabriel-stadium.webp" alt="Gabriel at a football stadium in Atlanta" loading="eager" width="960" height="1280" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/GabrielVillagran/Gabriel-Portfolio/master/public/images/gabriel-profile.webp';" />
+      <div class="hero-photo-overlay"><span>ATLANTA // PERSONAL ARCHIVE</span><span>WORLD CUP EXPERIENCE</span></div>
+    </div>
     <div class="hero-bottom"><span>SCROLL TO EXPLORE ↓</span><span>LOCAL BUILD / NO PUBLIC DEPLOYMENT</span></div>
   </section>
   <section class="section-block" id="experience"><div class="section-heading"><div><span class="eyebrow">01 / EXPERIENCE LOG</span><h2>WORKING <span>EXPERIENCE.</span></h2><p>Places I’ve had the pleasure of building great things with.</p></div><a class="small-link" href="/work/">ALL EXPERIENCE ↗</a></div><div class="role-grid">{roles.map((role, i) => <article class="panel role-card"><span class="card-num">0{i + 1} / DEPLOYMENT HISTORY</span><h3>{role.company}</h3><span class="role-caption">{role.role}</span><p>{role.description}</p><div class="tag-list">{role.tags.map(tag => <span>{tag}</span>)}</div><div class="card-foot">{role.period}<span>↗</span></div></article>)}</div></section>
