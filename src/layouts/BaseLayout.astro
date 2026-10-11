@@ -16,7 +16,11 @@ const pathname = Astro.url.pathname;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#090d10" />
     <meta name="description" content={description} />
-    <title>{title} // Gabriel Villagrán</title>
+    <title>{title === "Home" ? "Gabriel Villagrán | Software Engineer" : `${title} | Gabriel Villagrán`}</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title === "Home" ? "Gabriel Villagrán | Software Engineer" : `${title} | Gabriel Villagrán`} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
