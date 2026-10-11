@@ -117,3 +117,40 @@
 @media(max-width:1200px){.mission-details{grid-template-columns:1fr}}
 @media(max-width:780px){.mission-detail-panel{padding:15px}.mission-detail-panel li{font-size:12px}.mission-info{padding:22px}.mission-slide{min-height:0}}
 @media(prefers-reduced-motion:reduce){.mission-slide.is-active .mission-detail-panel,.mission-slide.is-active .mission-tools{animation:none}}
+
+/* Home: subtle industrial illumination and cinematic reveals */
+.hero-enhanced{isolation:isolate;--light-x:75%;--light-y:42%}
+.hero-enhanced::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(450px circle at var(--light-x) var(--light-y),rgba(255,104,72,.11),transparent 75%);transition:opacity .25s ease}
+.hero-enhanced .hero-photo{isolation:isolate;box-shadow:0 25px 70px #0008,0 0 40px #ff68481c}
+.hero-enhanced .hero-photo::after{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid #ff68486b;box-shadow:inset 0 0 75px #ff68481d;background:linear-gradient(135deg,#ff68481b,transparent 38%,#0a10112f);z-index:1}
+.hero-photo-scanner{position:absolute;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(180deg,transparent 0 8px,#ffffff06 9px,transparent 10px);opacity:.22}
+.hero-enhanced .hero-photo-overlay{z-index:3}
+.hero-enhanced .hero-photo img{filter:contrast(1.05) saturate(.85);transition:filter .5s ease,transform .7s ease}
+.hero-enhanced .hero-photo:hover img{filter:contrast(1.07) saturate(1);transform:scale(1.025)}
+.hero-enhanced .hero-content h1{text-shadow:0 0 50px #ff68481c}
+.hero-enhanced .button-primary{box-shadow:0 0 26px #ff684820}
+@media(prefers-reduced-motion:no-preference){
+  [data-reveal].is-visible{animation:home-reveal .65s cubic-bezier(.2,.7,.2,1) both}
+  .hero-enhanced .hero-photo.is-visible{animation-delay:.1s}
+  @keyframes home-reveal{from{opacity:.75;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+}
+/* Writing: searchable technical archive */
+.archive-controls{margin-top:48px;padding:24px 26px;border:1px solid var(--line);background:linear-gradient(135deg,#172126,#10171b)}
+.archive-controls-top{display:flex;justify-content:space-between;align-items:center;gap:14px;font:11px "IBM Plex Mono",monospace;letter-spacing:.08em;color:#a8b6bb}
+.archive-controls-top [data-results]{color:var(--orange);white-space:nowrap}
+.archive-search-wrap{display:flex;align-items:center;gap:13px;margin-top:14px;background:#0a1013;border:1px solid #45565b;padding:0 17px}
+.archive-search-wrap:focus-within{border-color:var(--orange);box-shadow:0 0 0 1px #ff684833}
+.archive-search-wrap>span{color:var(--orange);font-size:29px;line-height:1}
+.archive-search-wrap input{border:0;outline:0;background:transparent;color:#f0f3f3;font:15px Inter,sans-serif;padding:15px 0;width:100%;min-width:0}
+.archive-search-wrap input::placeholder{color:#87969c}
+.archive-filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:19px}
+.archive-filters button{border:1px solid #405057;background:#19262b;color:#aebdc1;padding:10px 13px;cursor:pointer;font:10px "IBM Plex Mono",monospace;letter-spacing:.04em;transition:background .2s,border-color .2s,color .2s}
+.archive-filters button:hover{border-color:var(--orange);color:#fff}
+.archive-filters button[aria-pressed=true]{background:var(--orange);border-color:var(--orange);color:#0b1114}
+.archive-filters button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.writing-card[hidden],.archive-empty[hidden]{display:none}
+.archive-empty{margin:0 0 100px;padding:35px;border:1px dashed var(--line);color:#acbdc0;text-align:center}
+.writing-card{transition:border-color .25s,transform .25s}
+.writing-card:hover{border-color:var(--orange);transform:translateY(-3px)}
+@media(max-width:600px){.archive-controls{padding:18px}.archive-controls-top{font-size:9px}.archive-filters button{font-size:9px;padding:9px}.hero-enhanced .hero-photo:hover img{transform:none}}
+@media(prefers-reduced-motion:reduce){.hero-enhanced .hero-photo img,.writing-card{transition:none}.hero-enhanced::before{transition:none}}
