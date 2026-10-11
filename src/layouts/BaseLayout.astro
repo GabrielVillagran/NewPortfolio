@@ -1,0 +1,40 @@
+---
+import '../styles/global.css';
+import { navigation } from '../data/site';
+interface Props {
+  title: string;
+  description: string;
+  section?: string;
+}
+const { title, description, section = 'PERSONAL SYSTEM' } = Astro.props;
+const pathname = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#090d10" />
+    <meta name="description" content={description} />
+    <title>{title} // Gabriel Villagrán</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <div class="site-frame">
+      <header class="topbar">
+        <a class="logo" href="/" aria-label="Gabriel Villagrán home"><span class="logo-mark" aria-hidden="true">GV<span class="logo-slash">/</span></span><span class="logo-caption">GABRIEL <b>VILLAGRÁN</b><small>SOFTWARE ENGINEER</small></span></a>
+        <nav class="main-nav" aria-label="Main navigation">
+          {navigation.map((item, index) => <a href={item.href} aria-current={pathname === item.href ? 'page' : undefined}><span class="nav-index">0{index + 1}</span>{item.label}</a>)}
+        </nav>
+        <span class="header-status"><span class="status-dot" /> SYSTEM ONLINE</span>
+      </header>
+      <div class="system-strip"><span>GV // PERSONAL DEVELOPMENT ARCHIVE</span><span>{section}</span><span class="strip-end">EST. 2026 &nbsp; • &nbsp; BUILD 001</span></div>
+      <main id="content"><slot /></main>
+      <footer class="footer"><div><span class="eyebrow">END OF TRANSMISSION / 001</span><p>Gabriel Villagrán</p><small>Software engineering, writing, and building.</small></div><div class="footer-links"><a href="https://github.com/GabrielVillagran" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://open.spotify.com/user/12137688570?si=60bcae74be154a7c" target="_blank" rel="noopener noreferrer">SPOTIFY ↗</a><a href="#content">BACK TO TOP ↑</a></div></footer>
+    </div>
+  </body>
+</html>
