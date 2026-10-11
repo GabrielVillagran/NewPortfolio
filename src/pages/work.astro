@@ -5,8 +5,8 @@ import { roles } from '../data/site';
 <BaseLayout title="Work" description="Gabriel Villagrán's software engineering work experience." section="ARCHIVE / WORK">
   <header class="page-intro work-intro">
     <span class="eyebrow">01 / EXPERIENCE LOG</span>
-    <h1>SELECT YOUR <span>MISSION.</span></h1>
-    <p>Places I’ve had the pleasure of building great things with. Choose an assignment to explore my experience.</p>
+    <h1>MY WORKING <span>EXPERIENCE.</span></h1>
+    <p>Places I’ve had the pleasure of building great things with. Explore the projects, responsibilities, and technologies I worked with in each role.</p>
   </header>
 
   <section class="mission-select" aria-label="Work experience carousel" data-mission-carousel>
@@ -46,15 +46,25 @@ import { roles } from '../data/site';
               </>}
             </svg>
             <span class="mission-art-symbol">{String(i+1).padStart(2,'0')}</span>
-            <span class="mission-art-footer">PERSONNEL ARCHIVE / VERIFIED EXPERIENCE</span>
+            <span class="mission-art-footer">{role.missionLabel}</span>
           </div>
           <div class="mission-info">
             <span class="eyebrow">MISSION {String(i+1).padStart(2, '0')} // {role.period}</span>
             <h2>{role.company}</h2>
             <p class="mission-role">{role.role}</p>
             <p class="mission-location">{role.location}</p>
-            <p class="mission-description">{role.description}</p>
-            <div class="tag-list">{role.tags.map(tag => <span>{tag}</span>)}</div>
+            <p class="mission-description">{role.summary}</p>
+            <div class="mission-details">
+              <section class="mission-detail-panel">
+                <h3>WHAT I WORKED ON</h3>
+                <ul>{role.responsibilities.map(item => <li>{item}</li>)}</ul>
+              </section>
+              <section class="mission-detail-panel">
+                <h3>CONTRIBUTIONS & RESULTS</h3>
+                <ul>{role.impact.map(item => <li>{item}</li>)}</ul>
+              </section>
+            </div>
+            <div class="mission-tools"><h3>TECHNOLOGIES</h3><div class="tag-list">{role.stack.map(tag => <span>{tag}</span>)}</div></div>
             <div class="mission-bottom"><span class="status-dot" /> COMPLETED EXPERIENCE RECORD</div>
           </div>
         </article>)}
