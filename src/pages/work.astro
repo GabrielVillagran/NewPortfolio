@@ -17,8 +17,8 @@ import { roles } from '../data/site';
 
     <div class="mission-stage">
       <button class="mission-arrow" type="button" data-prev aria-label="Previous experience">←<span>PREV</span></button>
-      <div class="mission-viewport" data-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Professional experience, use arrow keys or scroll to navigate">
-        {roles.map((role, i) => <article class="mission-slide" role="group" aria-roledescription="slide" aria-label={`${i+1} of ${roles.length}: ${role.company}`} data-slide>
+      <div class="mission-viewport" data-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Professional experience. Use left and right arrow keys to navigate.">
+        {roles.map((role, i) => <article class="mission-slide" role="group" aria-roledescription="slide" aria-label={`${i+1} of ${roles.length}: ${role.company}`} aria-hidden={i === 0 ? "false" : "true"} data-slide>
           <div class={`mission-art mission-art--${i}`} aria-hidden="true">
             <div class="mission-art-grid"></div>
             <span class="mission-art-label">ASSIGNMENT // {String(i+1).padStart(2, '0')}</span>
@@ -108,7 +108,7 @@ import { roles } from '../data/site';
         counter.textContent = String(active + 1).padStart(2, '0');
         prev.disabled = active === 0;
         next.disabled = active === slides.length - 1;
-        slides.forEach((slide, i) => slide.classList.toggle("is-active", i === active));
+        slides.forEach((slide, i) => { slide.classList.toggle("is-active", i === active); slide.setAttribute("aria-hidden", String(i !== active)); });
         dots.forEach((dot, i) => {
           if (i === active) dot.setAttribute('aria-current', 'true');
           else dot.removeAttribute('aria-current');
@@ -135,8 +135,7 @@ import { roles } from '../data/site';
       viewport.addEventListener('scroll', () => {
         cancelAnimationFrame(scrollFrame);
         scrollFrame = requestAnimationFrame(() => {
-          const width = viewport.clientWidth || 1;
-          const position = Math.round(viewport.scrollLeft / width);
+          const position = slides.reduce((best, slide, i) => Math.abs((slide.offsetLeft - slides[0].offsetLeft) - viewport.scrollLeft) < Math.abs((slides[best].offsetLeft - slides[0].offsetLeft) - viewport.scrollLeft) ? i : best, 0);
           if (position !== active) { active = Math.max(0, Math.min(slides.length - 1, position)); sync(); }
         });
       }, { passive: true });
