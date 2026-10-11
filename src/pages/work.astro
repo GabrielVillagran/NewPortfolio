@@ -3,6 +3,100 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { roles } from '../data/site';
 ---
 <BaseLayout title="Work" description="Gabriel Villagrán's software engineering work experience." section="ARCHIVE / WORK">
-  <header class="page-intro"><span class="eyebrow">01 / EXPERIENCE LOG</span><h1>WORKING <span>EXPERIENCE.</span></h1><p>Places I’ve had the pleasure of building great things with.</p></header>
-  <div class="detail-list">{roles.map((role, i) => <article class="detail-panel"><div class="detail-left"><span class="eyebrow">ASSIGNMENT / 0{i + 1}</span><h2>{role.company}</h2><span class="role-caption">{role.role}</span><p class="period">{role.period}</p></div><div><p>{role.description}</p><div class="tag-list">{role.tags.map(tag => <span>{tag}</span>)}</div></div></article>)}</div>
+  <header class="page-intro work-intro">
+    <span class="eyebrow">01 / EXPERIENCE LOG</span>
+    <h1>SELECT YOUR <span>MISSION.</span></h1>
+    <p>Places I’ve had the pleasure of building great things with. Choose an assignment to explore my experience.</p>
+  </header>
+
+  <section class="mission-select" aria-label="Work experience carousel" data-mission-carousel>
+    <div class="mission-topline">
+      <span class="eyebrow">MISSION SELECT // WORK HISTORY</span>
+      <span class="mission-counter" aria-live="polite"><span data-current>01</span> / {String(roles.length).padStart(2, '0')}</span>
+    </div>
+
+    <div class="mission-stage">
+      <button class="mission-arrow" type="button" data-prev aria-label="Previous experience">←<span>PREV</span></button>
+      <div class="mission-viewport" data-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Professional experience, use arrow keys or scroll to navigate">
+        {roles.map((role, i) => <article class="mission-slide" role="group" aria-roledescription="slide" aria-label={`${i+1} of ${roles.length}: ${role.company}`} data-slide>
+          <div class="mission-art" aria-hidden="true">
+            <div class="mission-art-grid"></div>
+            <span class="mission-art-label">ASSIGNMENT // {String(i+1).padStart(2, '0')}</span>
+            <span class="mission-art-symbol">{String(i+1).padStart(2, '0')}</span>
+            <span class="mission-art-footer">PERSONNEL ARCHIVE / VERIFIED EXPERIENCE</span>
+          </div>
+          <div class="mission-info">
+            <span class="eyebrow">MISSION {String(i+1).padStart(2, '0')} // {role.period}</span>
+            <h2>{role.company}</h2>
+            <p class="mission-role">{role.role}</p>
+            <p class="mission-description">{role.description}</p>
+            <div class="tag-list">{role.tags.map(tag => <span>{tag}</span>)}</div>
+            <div class="mission-bottom"><span class="status-dot" /> COMPLETED EXPERIENCE RECORD</div>
+          </div>
+        </article>)}
+      </div>
+      <button class="mission-arrow" type="button" data-next aria-label="Next experience"><span>NEXT</span>→</button>
+    </div>
+
+    <div class="mission-footer">
+      <div class="mission-dots" role="group" aria-label="Select experience">
+        {roles.map((role, i) => <button type="button" data-dot={i} aria-label={`Show ${role.company}`} aria-current={i === 0 ? 'true' : undefined}>{String(i+1).padStart(2,'0')}</button>)}
+      </div>
+      <p>← → ARROW KEYS <span>//</span> SCROLL OVER CAROUSEL <span>//</span> SWIPE ON MOBILE</p>
+    </div>
+  </section>
+  <script>
+    const carousel = document.querySelector<HTMLElement>('[data-mission-carousel]');
+    if (carousel) {
+      const viewport = carousel.querySelector<HTMLElement>('[data-viewport]')!;
+      const slides = Array.from(carousel.querySelectorAll<HTMLElement>('[data-slide]'));
+      const dots = Array.from(carousel.querySelectorAll<HTMLButtonElement>('[data-dot]'));
+      const prev = carousel.querySelector<HTMLButtonElement>('[data-prev]')!;
+      const next = carousel.querySelector<HTMLButtonElement>('[data-next]')!;
+      const counter = carousel.querySelector<HTMLElement>('[data-current]')!;
+      let active = 0;
+      let lastWheel = 0;
+      const select = (index: number, smooth = true) => {
+        active = Math.max(0, Math.min(slides.length - 1, index));
+        viewport.scrollTo({ left: slides[active].offsetLeft - viewport.offsetLeft, behavior: smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'instant' });
+        sync();
+      };
+      const sync = () => {
+        counter.textContent = String(active + 1).padStart(2, '0');
+        prev.disabled = active === 0;
+        next.disabled = active === slides.length - 1;
+        dots.forEach((dot, i) => {
+          if (i === active) dot.setAttribute('aria-current', 'true');
+          else dot.removeAttribute('aria-current');
+        });
+      };
+      prev.addEventListener('click', () => select(active - 1));
+      next.addEventListener('click', () => select(active + 1));
+      dots.forEach((dot, i) => dot.addEventListener('click', () => select(i)));
+      viewport.addEventListener('keydown', event => {
+        if (event.key === 'ArrowRight') { event.preventDefault(); select(active + 1); }
+        if (event.key === 'ArrowLeft') { event.preventDefault(); select(active - 1); }
+      });
+      viewport.addEventListener('wheel', event => {
+        if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+        const direction = Math.sign(event.deltaY);
+        if (!direction || (direction < 0 && active === 0) || (direction > 0 && active === slides.length - 1)) return;
+        event.preventDefault();
+        const now = performance.now();
+        if (now - lastWheel < 500) return;
+        lastWheel = now;
+        select(active + direction);
+      }, { passive: false });
+      let scrollFrame = 0;
+      viewport.addEventListener('scroll', () => {
+        cancelAnimationFrame(scrollFrame);
+        scrollFrame = requestAnimationFrame(() => {
+          const width = viewport.clientWidth || 1;
+          const position = Math.round(viewport.scrollLeft / width);
+          if (position !== active) { active = Math.max(0, Math.min(slides.length - 1, position)); sync(); }
+        });
+      }, { passive: true });
+      sync();
+    }
+  </script>
 </BaseLayout>
