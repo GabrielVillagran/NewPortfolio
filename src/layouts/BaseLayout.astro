@@ -24,7 +24,8 @@ const pathname = Astro.url.pathname;
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
-    <div class="site-frame">
+    <div class="site-frame" data-site-shell>
+      <div class="ambient-backdrop" aria-hidden="true"><div class="ambient-grid"></div><div class="ambient-beam"></div><div class="ambient-vignette"></div></div>
       <header class="topbar">
         <a class="logo" href="/" aria-label="Gabriel Villagrán home"><span class="logo-mark" aria-hidden="true">GV<span class="logo-slash">/</span></span><span class="logo-caption">GABRIEL <b>VILLAGRÁN</b><small>SOFTWARE ENGINEER</small></span></a>
         <nav class="main-nav" aria-label="Main navigation">
@@ -36,5 +37,28 @@ const pathname = Astro.url.pathname;
       <main id="content"><slot /></main>
       <footer class="footer"><div><span class="eyebrow">END OF TRANSMISSION / 001</span><p>Gabriel Villagrán</p><small>Software engineering, writing, and building.</small></div><div class="footer-links"><a href="https://github.com/GabrielVillagran" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://open.spotify.com/user/12137688570?si=60bcae74be154a7c" target="_blank" rel="noopener noreferrer">SPOTIFY ↗</a><a href="#content">BACK TO TOP ↑</a></div></footer>
     </div>
+    <script>
+      const shell = document.querySelector<HTMLElement>('[data-site-shell]');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+      if (shell && finePointer.matches && !reducedMotion.matches) {
+        let queued = false;
+        let pointerX = window.innerWidth * 0.75;
+        let pointerY = window.innerHeight * 0.3;
+        const update = () => {
+          shell.style.setProperty('--ambient-x', `${pointerX}px`);
+          shell.style.setProperty('--ambient-y', `${pointerY}px`);
+          queued = false;
+        };
+        window.addEventListener('pointermove', event => {
+          pointerX = event.clientX;
+          pointerY = event.clientY;
+          if (!queued) {
+            queued = true;
+            requestAnimationFrame(update);
+          }
+        }, { passive: true });
+      }
+    </script>
   </body>
 </html>
