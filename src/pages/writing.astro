@@ -1,7 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts')).sort((a,b) => b.data.published.getTime() - a.data.published.getTime());
 ---
 <BaseLayout title="Writing" description="Writing, tutorials, and academic notes by Gabriel Villagrán." section="ARCHIVE / WRITING">
   <header class="page-intro"><span class="eyebrow">03 / KNOWLEDGE ARCHIVE</span><h1>WELCOME TO <span>MY PLACE.</span></h1><p>Here you can find notes from my time in the LaunchX bootcamp and research I worked on for university courses.</p></header>
-  <section class="panel empty-archive"><span class="eyebrow">ARCHIVE STATUS / IN PROGRESS</span><h2>ADDING THE OLD NOTES.</h2><p>I’m moving my LaunchX articles, university research, and tutorials into this new design. You can still read the existing posts in my original portfolio.</p><a class="button button-outline" href="https://gabrielvillagran.github.io/Gabriel-Portfolio/blog/" target="_blank" rel="noopener noreferrer">READ ORIGINAL ARCHIVE ↗</a></section>
+  <div class="writing-grid">
+    {posts.map((post, i) => <article class="panel writing-card">
+      <span class="card-num">ENTRY / {String(i + 1).padStart(2, '0')}</span>
+      <span class="eyebrow">{post.data.category}</span>
+      <h2><a href={`/writing/${post.id}/`}>{post.data.title}</a></h2>
+      <p>{post.data.description}</p>
+      <div class="writing-meta"><time datetime={post.data.published.toISOString()}>{post.data.published.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'})}</time><span>{post.data.readingMinutes} min read</span></div>
+      <a class="small-link" href={`/writing/${post.id}/`}>READ ARTICLE ↗</a>
+    </article>)}
+  </div>
 </BaseLayout>
