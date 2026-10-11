@@ -3,11 +3,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('posts')).sort((a,b) => b.data.published.getTime() - a.data.published.getTime());
+const categories = ['All', ...new Set(posts.map(post => post.data.category))].sort((a, b) => a === 'All' ? -1 : b === 'All' ? 1 : a.localeCompare(b));
 ---
 <BaseLayout title="Writing" description="Writing, tutorials, and academic notes by Gabriel Villagrán." section="ARCHIVE / WRITING">
   <header class="page-intro"><span class="eyebrow">03 / KNOWLEDGE ARCHIVE</span><h1>WELCOME TO <span>MY PLACE.</span></h1><p>Here you can find notes from my time in the LaunchX bootcamp and research I worked on for university courses.</p></header>
-  <div class="writing-grid">
-    {posts.map((post, i) => <article class="panel writing-card">
+  <section class="archive-controls" aria-label="Filter writing archive" data-archive>
+    <div class="archive-controls-top">
+      <label for="article-search">SEARCH ARCHIVE // KEYWORDS</label>
+      <span aria-live="polite" data-results>{posts.length} ARTICLES FOUND</span>
+    </div>
+    <div class="archive-search-wrap"><span aria-hidden="true">⌕</span><input id="article-search" data-search type="search" placeholder="Search titles, topics, descriptions..." autocomplete="off" /></div>
+    <div class="archive-filters" role="group" aria-label="Filter by category">
+      {categories.map(category => <button type="button" data-category={category} aria-pressed={category === 'All' ? 'true' : 'false'}>{category === 'All' ? 'ALL ARTICLES' : category.toUpperCase()}</button>)}
+    </div>
+  </section>
+  <div class="writing-grid" data-article-grid>
+    {posts.map((post, i) => <article class="panel writing-card" data-article data-category={post.data.category} data-search-text={`${post.data.title} ${post.data.description} ${post.data.category}`.toLowerCase()}>
       <span class="card-num">ENTRY / {String(i + 1).padStart(2, '0')}</span>
       <span class="eyebrow">{post.data.category}</span>
       <h2><a href={`/writing/${post.id}/`}>{post.data.title}</a></h2>
@@ -16,4 +27,36 @@ const posts = (await getCollection('posts')).sort((a,b) => b.data.published.getT
       <a class="small-link" href={`/writing/${post.id}/`}>READ ARTICLE ↗</a>
     </article>)}
   </div>
+  <p class="archive-empty" data-empty hidden>No articles match this search. Try another keyword or category.</p>
+  <script>
+    const archive = document.querySelector<HTMLElement>('[data-archive]');
+    if (archive) {
+      const search = archive.querySelector<HTMLInputElement>('[data-search]')!;
+      const categories = Array.from(archive.querySelectorAll<HTMLButtonElement>('[data-category]'));
+      const articles = Array.from(document.querySelectorAll<HTMLElement>('[data-article]'));
+      const results = archive.querySelector<HTMLElement>('[data-results]')!;
+      const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+      let selectedCategory = 'All';
+      const filter = () => {
+        const query = search.value.trim().toLocaleLowerCase();
+        let visible = 0;
+        for (const article of articles) {
+          const categoryMatches = selectedCategory === 'All' || article.dataset.category === selectedCategory;
+          const textMatches = (article.dataset.searchText || '').includes(query);
+          const matches = categoryMatches && textMatches;
+          article.hidden = !matches;
+          if (matches) visible++;
+        }
+        results.textContent = `${visible} ${visible === 1 ? 'ARTICLE' : 'ARTICLES'} FOUND`;
+        empty.hidden = visible > 0;
+      };
+      search.addEventListener('input', filter);
+      categories.forEach(button => button.addEventListener('click', () => {
+        selectedCategory = button.dataset.category || 'All';
+        categories.forEach(option => option.setAttribute('aria-pressed', String(option === button)));
+        filter();
+      }));
+      filter();
+    }
+  </script>
 </BaseLayout>
