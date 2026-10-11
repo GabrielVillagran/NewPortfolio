@@ -19,10 +19,33 @@ import { roles } from '../data/site';
       <button class="mission-arrow" type="button" data-prev aria-label="Previous experience">←<span>PREV</span></button>
       <div class="mission-viewport" data-viewport tabindex="0" role="region" aria-roledescription="carousel" aria-label="Professional experience, use arrow keys or scroll to navigate">
         {roles.map((role, i) => <article class="mission-slide" role="group" aria-roledescription="slide" aria-label={`${i+1} of ${roles.length}: ${role.company}`} data-slide>
-          <div class="mission-art" aria-hidden="true">
+          <div class={`mission-art mission-art--${i}`} aria-hidden="true">
             <div class="mission-art-grid"></div>
             <span class="mission-art-label">ASSIGNMENT // {String(i+1).padStart(2, '0')}</span>
-            <span class="mission-art-symbol">{String(i+1).padStart(2, '0')}</span>
+            <svg class="mission-illustration" viewBox="0 0 380 340" fill="none" aria-hidden="true">
+              {i === 0 ? <>
+                <path d="M85 112h210l-13 152H98L85 112Z" stroke="currentColor" stroke-width="4"/>
+                <path d="M134 116V94c0-33 25-58 56-58s56 25 56 58v22" stroke="currentColor" stroke-width="5"/>
+                <path d="M115 156h150M111 194h158M123 233h134" stroke="currentColor" opacity=".4"/>
+                <path d="M166 172l18 18 36-40" stroke="currentColor" stroke-width="6" stroke-linecap="square"/>
+                <circle cx="190" cy="173" r="105" stroke="currentColor" stroke-dasharray="3 13" opacity=".4"/>
+              </> : i === 1 ? <>
+                <rect x="72" y="48" width="236" height="236" rx="12" stroke="currentColor" stroke-width="4"/>
+                <rect x="102" y="78" width="176" height="176" rx="6" stroke="currentColor" opacity=".45"/>
+                <circle cx="190" cy="166" r="41" stroke="currentColor" stroke-width="4"/>
+                <path d="M190 125V84M190 207v45M149 166h-47M231 166h47M161 137l-35-35M219 195l35 35M219 137l35-35M161 195l-35 35" stroke="currentColor" stroke-width="4"/>
+                <path d="M50 92H24M50 146H24M50 200H24M50 254H24M356 92h-26M356 146h-26M356 200h-26M356 254h-26" stroke="currentColor" stroke-width="4" opacity=".7"/>
+              </> : <>
+                <rect x="65" y="94" width="250" height="158" rx="4" stroke="currentColor" stroke-width="4"/>
+                <path d="M84 185h40l22-35 28 55 25-32 26 12 22-55 20 55h30" stroke="currentColor" stroke-width="5"/>
+                <path d="M132 283h116M190 252v30M88 72h204" stroke="currentColor" stroke-width="4" opacity=".6"/>
+                <circle cx="85" cy="54" r="8" fill="currentColor"/>
+                <circle cx="190" cy="54" r="8" fill="currentColor"/>
+                <circle cx="295" cy="54" r="8" fill="currentColor"/>
+                <path d="M85 62v27M190 62v27M295 62v27" stroke="currentColor" stroke-dasharray="4 6"/>
+              </>}
+            </svg>
+            <span class="mission-art-symbol">{String(i+1).padStart(2,'0')}</span>
             <span class="mission-art-footer">PERSONNEL ARCHIVE / VERIFIED EXPERIENCE</span>
           </div>
           <div class="mission-info">
@@ -45,6 +68,15 @@ import { roles } from '../data/site';
       <p>← → ARROW KEYS <span>//</span> SCROLL OVER CAROUSEL <span>//</span> SWIPE ON MOBILE</p>
     </div>
   </section>
+
+  <section class="resume-download panel" aria-labelledby="resume-heading">
+    <div>
+      <span class="eyebrow">PERSONNEL FILE // PDF</span>
+      <h2 id="resume-heading">TAKE A COPY OF MY <span>RÉSUMÉ.</span></h2>
+      <p>Want the details in one place? Download my résumé for a closer look at my experience and technical background.</p>
+    </div>
+    <a class="button button-primary" href="/resume/GabrielVillagran_Resume.pdf" download="GabrielVillagran_Resume.pdf" type="application/pdf">DOWNLOAD RÉSUMÉ <span>↓</span></a>
+  </section>
   <script>
     const carousel = document.querySelector<HTMLElement>('[data-mission-carousel]');
     if (carousel) {
@@ -58,7 +90,7 @@ import { roles } from '../data/site';
       let lastWheel = 0;
       const select = (index: number, smooth = true) => {
         active = Math.max(0, Math.min(slides.length - 1, index));
-        viewport.scrollTo({ left: slides[active].offsetLeft - viewport.offsetLeft, behavior: smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'instant' });
+        viewport.scrollTo({ left: slides[active].offsetLeft - slides[0].offsetLeft, behavior: smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'instant' });
         sync();
       };
       const sync = () => {
