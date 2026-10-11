@@ -49,7 +49,7 @@ const pathname = Astro.url.pathname;
           <button type="button" data-analytics-accept>ACCEPT</button>
         </div>
       </aside>
-      <footer class="footer"><div><span class="eyebrow">END OF TRANSMISSION / 001</span><p>Gabriel Villagrán</p><small>Software engineering, writing, and building.</small></div><div class="footer-links"><a href="https://github.com/GabrielVillagran" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://open.spotify.com/user/12137688570?si=60bcae74be154a7c" target="_blank" rel="noopener noreferrer">SPOTIFY ↗</a><a href="#content">BACK TO TOP ↑</a></div></footer>
+      <footer class="footer"><div><span class="eyebrow">END OF TRANSMISSION / 001</span><p>Gabriel Villagrán</p><small>Software engineering, writing, and building.</small></div><div class="footer-links"><a href="https://github.com/GabrielVillagran" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://open.spotify.com/user/12137688570?si=60bcae74be154a7c" target="_blank" rel="noopener noreferrer">SPOTIFY ↗</a><a href="#content">BACK TO TOP ↑</a><button type="button" class="privacy-settings" data-analytics-settings>ANALYTICS SETTINGS</button></div></footer>
     </div>
     <script>
       const measurementId = 'G-QD08W85PQZ';
@@ -80,9 +80,12 @@ const pathname = Astro.url.pathname;
         try { localStorage.setItem(consentKey, choice); } catch { /* Storage unavailable */ }
         if (consentPanel) consentPanel.hidden = true;
         if (choice === 'accepted') enableAnalytics();
+        else if (analyticsChoice === 'accepted') window.location.reload();
+        analyticsChoice = choice;
       };
       acceptButton?.addEventListener('click', () => saveConsent('accepted'));
       rejectButton?.addEventListener('click', () => saveConsent('declined'));
+      document.querySelector<HTMLButtonElement>('[data-analytics-settings]')?.addEventListener('click', () => { if (consentPanel) consentPanel.hidden = false; });
 
       const shell = document.querySelector<HTMLElement>('[data-site-shell]');
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
