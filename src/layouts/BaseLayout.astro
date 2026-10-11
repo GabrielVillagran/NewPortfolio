@@ -58,53 +58,24 @@ const pathname = Astro.url.pathname;
       const acceptButton = document.querySelector<HTMLButtonElement>('[data-analytics-accept]');
       const rejectButton = document.querySelector<HTMLButtonElement>('[data-analytics-reject]');
 
-      // Temporary, console-only GA4 trace; never shows UI or sends data before consent.
-      const gaTrace = new URLSearchParams(location.search).get('ga_trace') === '1';
-      const trace = (message: string, detail?: unknown) => {
-        if (gaTrace) console.info('[GA4 TRACE]', message, detail ?? '');
-      };
-      if (gaTrace) {
-        trace('Diagnostic enabled. No visitor data is sent until analytics consent is accepted.');
-        const seen = new Set<string>();
-        const checkResource = (entry: PerformanceEntry) => {
-          if (!entry.name.startsWith('https://')) return;
-          let url: URL;
-          try { url = new URL(entry.name); } catch { return; }
-          const gaRequest = (url.hostname.endsWith('google-analytics.com') && url.pathname.includes('collect'))
-            || (url.hostname === 'www.googletagmanager.com' && url.pathname.includes('/gtag/js'));
-          if (!gaRequest || seen.has(entry.name)) return;
-          seen.add(entry.name);
-          // Do not print query strings: they can contain page URLs and other visitor data.
-          trace('Resource observed', { host: url.hostname, path: url.pathname, durationMs: Math.round(entry.duration), transferSize: (entry as PerformanceResourceTiming).transferSize });
-          trace('Resource timing indicates an attempted request, NOT that GA4 accepted an event.');
-        };
-        performance.getEntriesByType('resource').forEach(checkResource);
-        if ('PerformanceObserver' in window) {
-          const observer = new PerformanceObserver(list => list.getEntries().forEach(checkResource));
-          observer.observe({ type: 'resource', buffered: true });
-        }
-      }
+      // Only initialize GA4 after explicit visitor consent.
+      // Google tag expects the standard `arguments` queue format.
       const enableAnalytics = () => {
         if (document.querySelector('script[data-ga4]')) return;
-        const win = window as typeof window & { dataLayer?: unknown[][]; gtag?: (...args: unknown[]) => void };
-        win.dataLayer = win.dataLayer || [];
-        win.gtag = win.gtag || ((...args: unknown[]) => { win.dataLayer!.push(args); });
-        win.gtag('js', new Date());
-        win.gtag('config', measurementId, { anonymize_ip: true, ...(gaTrace ? { debug_mode: true } : {}) });
-        trace('Config queued', { measurementId, debugMode: gaTrace });
+        const gaWindow = window as typeof window & {
+          dataLayer?: IArguments[];
+          gtag?: (...args: unknown[]) => void;
+        };
+        gaWindow.dataLayer = gaWindow.dataLayer || [];
+        gaWindow.gtag = function gtag() {
+          gaWindow.dataLayer!.push(arguments);
+        };
+        gaWindow.gtag('js', new Date());
+        gaWindow.gtag('config', measurementId);
+
         const script = document.createElement('script');
         script.async = true;
         script.dataset.ga4 = 'true';
-        trace('Google tag script requested');
-        script.addEventListener('load', () => {
-          trace('Google tag script loaded; now look for google-analytics.com/g/collect in Network and events in GA4 DebugView.');
-          if (gaTrace) {
-            // Send an explicit test event to distinguish event dispatch from script loading.
-            win.gtag?.('event', 'ga4_connection_test', { debug_mode: true, transport_type: 'beacon' });
-            trace('Test event queued: ga4_connection_test. This does not prove delivery.');
-          }
-        });
-        script.addEventListener('error', () => trace('Google tag script failed to load (network, content blocker, or CSP).'));
         script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
         document.head.appendChild(script);
       };
@@ -122,7 +93,6 @@ const pathname = Astro.url.pathname;
       };
       acceptButton?.addEventListener('click', () => saveConsent('accepted'));
       rejectButton?.addEventListener('click', () => saveConsent('declined'));
-      trace('Stored consent', analyticsChoice);
       document.querySelector<HTMLButtonElement>('[data-analytics-settings]')?.addEventListener('click', () => { if (consentPanel) consentPanel.hidden = false; });
 
       const shell = document.querySelector<HTMLElement>('[data-site-shell]');
