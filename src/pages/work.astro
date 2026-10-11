@@ -52,6 +52,7 @@ import { roles } from '../data/site';
             <span class="eyebrow">MISSION {String(i+1).padStart(2, '0')} // {role.period}</span>
             <h2>{role.company}</h2>
             <p class="mission-role">{role.role}</p>
+            <p class="mission-location">{role.location}</p>
             <p class="mission-description">{role.description}</p>
             <div class="tag-list">{role.tags.map(tag => <span>{tag}</span>)}</div>
             <div class="mission-bottom"><span class="status-dot" /> COMPLETED EXPERIENCE RECORD</div>
@@ -75,7 +76,7 @@ import { roles } from '../data/site';
       <h2 id="resume-heading">TAKE A COPY OF MY <span>RÉSUMÉ.</span></h2>
       <p>Want the details in one place? Download my résumé for a closer look at my experience and technical background.</p>
     </div>
-    <span class="button button-outline resume-pending" aria-label="Resume download pending PDF upload">RÉSUMÉ PDF // UPLOAD PENDING <span>↓</span></span>
+    <a class="button button-primary" href="/resume/GabrielVillagran_Resume.pdf" download="GabrielVillagran_Resume.pdf" type="application/pdf">DOWNLOAD RÉSUMÉ <span>↓</span></a>
   </section>
   <script>
     const carousel = document.querySelector<HTMLElement>('[data-mission-carousel]');
