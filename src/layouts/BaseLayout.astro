@@ -39,9 +39,51 @@ const pathname = Astro.url.pathname;
       </header>
       <div class="system-strip"><span>GV // PERSONAL DEVELOPMENT ARCHIVE</span><span>{section}</span><span class="strip-end">EST. 1998 &nbsp; • &nbsp; BUILD 001</span></div>
       <main id="content"><slot /></main>
+      <aside class="analytics-consent" data-analytics-consent hidden aria-labelledby="analytics-consent-title">
+        <div>
+          <strong id="analytics-consent-title">OPTIONAL ANALYTICS</strong>
+          <p>May I use Google Analytics to understand visits, article views, and résumé downloads? Analytics is optional, and you can change your choice later.</p>
+        </div>
+        <div class="analytics-consent-actions">
+          <button type="button" data-analytics-reject>DECLINE</button>
+          <button type="button" data-analytics-accept>ACCEPT</button>
+        </div>
+      </aside>
       <footer class="footer"><div><span class="eyebrow">END OF TRANSMISSION / 001</span><p>Gabriel Villagrán</p><small>Software engineering, writing, and building.</small></div><div class="footer-links"><a href="https://github.com/GabrielVillagran" target="_blank" rel="noopener noreferrer">GITHUB ↗</a><a href="https://open.spotify.com/user/12137688570?si=60bcae74be154a7c" target="_blank" rel="noopener noreferrer">SPOTIFY ↗</a><a href="#content">BACK TO TOP ↑</a></div></footer>
     </div>
     <script>
+      const measurementId = 'G-QD08W85PQZ';
+      const consentKey = 'gv-analytics-consent-v1';
+      const consentPanel = document.querySelector<HTMLElement>('[data-analytics-consent]');
+      const acceptButton = document.querySelector<HTMLButtonElement>('[data-analytics-accept]');
+      const rejectButton = document.querySelector<HTMLButtonElement>('[data-analytics-reject]');
+
+      const enableAnalytics = () => {
+        if (document.querySelector('script[data-ga4]')) return;
+        const win = window as typeof window & { dataLayer?: unknown[][]; gtag?: (...args: unknown[]) => void };
+        win.dataLayer = win.dataLayer || [];
+        win.gtag = win.gtag || ((...args: unknown[]) => { win.dataLayer!.push(args); });
+        win.gtag('js', new Date());
+        win.gtag('config', measurementId, { anonymize_ip: true });
+        const script = document.createElement('script');
+        script.async = true;
+        script.dataset.ga4 = 'true';
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+        document.head.appendChild(script);
+      };
+
+      let analyticsChoice: string | null = null;
+      try { analyticsChoice = localStorage.getItem(consentKey); } catch { /* Storage unavailable */ }
+      if (analyticsChoice === 'accepted') enableAnalytics();
+      else if (analyticsChoice !== 'declined' && consentPanel) consentPanel.hidden = false;
+      const saveConsent = (choice: 'accepted' | 'declined') => {
+        try { localStorage.setItem(consentKey, choice); } catch { /* Storage unavailable */ }
+        if (consentPanel) consentPanel.hidden = true;
+        if (choice === 'accepted') enableAnalytics();
+      };
+      acceptButton?.addEventListener('click', () => saveConsent('accepted'));
+      rejectButton?.addEventListener('click', () => saveConsent('declined'));
+
       const shell = document.querySelector<HTMLElement>('[data-site-shell]');
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
