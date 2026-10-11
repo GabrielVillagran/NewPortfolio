@@ -99,3 +99,21 @@
 /* Resume-aligned location metadata */
 .role-location{display:block;margin-top:8px;color:#9babb1;font:10px "IBM Plex Mono",monospace;letter-spacing:.05em}
 .mission-location{font:11px "IBM Plex Mono",monospace;letter-spacing:.04em;color:#a7b6bb;margin:2px 0 4px}
+
+/* Expanded professional work records inside the mission selector */
+.mission-slide{align-items:stretch}
+.mission-info{justify-content:flex-start;padding-top:clamp(26px,4vw,52px);padding-bottom:clamp(26px,4vw,52px)}
+.mission-details{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:12px;margin-top:22px}
+.mission-detail-panel{background:#182328;border:1px solid #35464c;padding:20px 19px;border-left:2px solid var(--orange)}
+.mission-detail-panel h3,.mission-tools h3{color:#e9eeee;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.1em;margin:0 0 14px}
+.mission-detail-panel ul{margin:0;padding-left:17px}
+.mission-detail-panel li{font-size:13px;line-height:1.65;color:#bbcacd;margin:0 0 10px}
+.mission-detail-panel li:last-child{margin-bottom:0}
+.mission-tools{padding-top:20px}
+.mission-tools .tag-list{margin-top:0}
+.mission-art{align-self:stretch}
+.mission-slide.is-active .mission-detail-panel,.mission-slide.is-active .mission-tools{animation:mission-arrive .45s ease both}
+.mission-slide.is-active .mission-tools{animation-delay:.08s}
+@media(max-width:1200px){.mission-details{grid-template-columns:1fr}}
+@media(max-width:780px){.mission-detail-panel{padding:15px}.mission-detail-panel li{font-size:12px}.mission-info{padding:22px}.mission-slide{min-height:0}}
+@media(prefers-reduced-motion:reduce){.mission-slide.is-active .mission-detail-panel,.mission-slide.is-active .mission-tools{animation:none}}
