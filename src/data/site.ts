@@ -36,24 +36,8 @@ export const projects = [
     name: "Battleship on Paper",
     category: "Browser game",
     status: "IN DEVELOPMENT",
-    description: "A notebook-inspired Battleship game using JavaScript and Three.js. An excuse to learn more about game state, interaction, and 3D on the web.",
+    description: "A notebook-inspired Battleship game using JavaScript and Three.js. I'm building it to practice game state, interaction, UI, and 3D concepts on the web.",
     tags: ["JavaScript", "Three.js", "Game UI"],
-  },
-  {
-    id: "02",
-    name: "3D Object Viewer",
-    category: "University archive",
-    status: "PAST PROJECT",
-    description: "An OpenGL project I built at university to load and explore 3D objects. One of my first experiences working directly with computer graphics.",
-    tags: ["OpenGL", "Computer Graphics", "3D"],
-  },
-  {
-    id: "03",
-    name: "AI Experiments",
-    category: "Personal lab",
-    status: "EXPERIMENTING",
-    description: "Small apps and prototypes where I practice integrating language models and using AI development tools. Some are hand-coded; some are vibe-coding experiments.",
-    tags: ["LLMs", "APIs", "Prototyping"],
   },
 ];
 
