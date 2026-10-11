@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { projects } from '../data/site';
 ---
-<BaseLayout title="Projects" description="Gabriel Villagrán's experiments with games, graphics, and AI." section="LAB / PROJECTS">
-  <header class="page-intro"><span class="eyebrow">02 / ACTIVE BUILDS</span><h1>PERSONAL <span>PROJECTS.</span></h1><p>Small apps, games, and tutorials I've been working on. This is where I share what I make while learning. Some projects use LLMs, some don't, and a few are vibe-coding experiments.</p></header>
+<BaseLayout title="Projects" description="Gabriel Villagrán's personal game development projects." section="LAB / PROJECTS">
+  <header class="page-intro"><span class="eyebrow">02 / ACTIVE BUILDS</span><h1>PERSONAL <span>PROJECTS.</span></h1><p>Projects I'm currently building to learn new tools and put ideas into practice. Battleship on Paper is my work in progress.</p></header>
   <div class="project-grid project-list">{projects.map(project => <article class="project-card"><div class="project-art"><div class="project-art-grid"></div><span class="project-art-index">EXPERIMENT // {project.id}</span><span class="project-symbol">{project.id === '01' ? '⌖' : project.id === '02' ? '◇' : '✳'}</span><span class="project-art-corner">[ {project.status} ]</span></div><div class="project-information"><span class="eyebrow">{project.category}</span><h2>{project.name}</h2><p>{project.description}</p><div class="tag-list">{project.tags.map(tag => <span>{tag}</span>)}</div></div></article>)}</div>
 </BaseLayout>
