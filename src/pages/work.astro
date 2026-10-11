@@ -75,7 +75,7 @@ import { roles } from '../data/site';
       <h2 id="resume-heading">TAKE A COPY OF MY <span>RÉSUMÉ.</span></h2>
       <p>Want the details in one place? Download my résumé for a closer look at my experience and technical background.</p>
     </div>
-    <a class="button button-primary" href="/resume/GabrielVillagran_Resume.pdf" download="GabrielVillagran_Resume.pdf" type="application/pdf">DOWNLOAD RÉSUMÉ <span>↓</span></a>
+    <span class="button button-outline resume-pending" aria-label="Resume download pending PDF upload">RÉSUMÉ PDF // UPLOAD PENDING <span>↓</span></span>
   </section>
   <script>
     const carousel = document.querySelector<HTMLElement>('[data-mission-carousel]');
@@ -90,13 +90,14 @@ import { roles } from '../data/site';
       let lastWheel = 0;
       const select = (index: number, smooth = true) => {
         active = Math.max(0, Math.min(slides.length - 1, index));
-        viewport.scrollTo({ left: slides[active].offsetLeft - slides[0].offsetLeft, behavior: smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'instant' });
+        viewport.scrollTo({ left: slides[active].offsetLeft - slides[0].offsetLeft, behavior: smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'auto' });
         sync();
       };
       const sync = () => {
         counter.textContent = String(active + 1).padStart(2, '0');
         prev.disabled = active === 0;
         next.disabled = active === slides.length - 1;
+        slides.forEach((slide, i) => slide.classList.toggle("is-active", i === active));
         dots.forEach((dot, i) => {
           if (i === active) dot.setAttribute('aria-current', 'true');
           else dot.removeAttribute('aria-current');
