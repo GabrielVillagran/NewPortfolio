@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map(post => ({ params: { slug: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const published = post.data.published.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'});
+---
+<BaseLayout title={post.data.title} description={post.data.description} section="ARCHIVE / ARTICLE">
+  <article class="article-page">
+    <header class="page-intro"><a href="/writing/" class="eyebrow">← WRITING / {post.data.category}</a><h1>{post.data.title}</h1><p>{post.data.description}</p><div class="writing-meta"><time datetime={post.data.published.toISOString()}>{published}</time><span>{post.data.readingMinutes} min read</span></div></header>
+    {post.data.revised && <p class="revision-note">Originally published {published}. Revised {post.data.revised.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'})}.</p>}
+    <div class="article-body"><Content /></div>
+    <a class="small-link" href="/writing/">← BACK TO WRITING</a>
+  </article>
+</BaseLayout>
